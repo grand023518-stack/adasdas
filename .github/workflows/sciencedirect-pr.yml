@@ -1,0 +1,29 @@
+name: ScienceDirect Counts
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  retrieve:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependency
+        run: pip install curl_cffi
+      - name: Retrieve ScienceDirect counts
+        run: python scripts/sciencedirect_counts.py
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sciencedirect-counts
+          path: sciencedirect_counts.json
+          if-no-files-found: warn
