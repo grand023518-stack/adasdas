@@ -25,13 +25,11 @@ def fetch(country):
         "User-Agent": "Mozilla/5.0",
         "Accept": "text/plain, text/markdown, */*",
         "X-Return-Format": "markdown",
-        "X-With-Generated-Alt": "true",
     }
     r = requests.get(url, headers=headers, timeout=180)
     text = r.text
     Path(f"jina_{country.lower()}.md").write_text(text, encoding="utf-8")
     years = {str(y): None for y in range(START_YEAR, END_YEAR + 1)}
-    # Try common facet formats: 2025 (232), 2025 232, or lines with year and result count.
     for y in range(START_YEAR, END_YEAR + 1):
         pats = [
             rf"(?m)^\s*{y}\s*\((\d[\d,]*)\)\s*$",
